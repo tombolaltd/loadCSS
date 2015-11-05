@@ -7,8 +7,17 @@ Licensed MIT
 /* global navigator */
 /* exported onloadCSS */
 function onloadCSS( ss, callback ) {
-	function isSafari5() {
-        	return (/OS 5_1/.test(navigator.userAgent) && /AppleWebKit\//.test(navigator.userAgent));
+	function doesNotSupportOnLoad() {
+		var doesNotSupportOnLoad = false;
+        	if (/OS 5_1/.test(navigator.userAgent) && /AppleWebKit\//.test(navigator.userAgent)) {
+        		doesNotSupportOnLoad = true;
+        	}
+        	
+        	if (/Android/.test(navigator.userAgent) && /AppleWebKit\//.test(navigator.userAgent)) {
+        		doesNotSupportOnLoad = true;
+        	}
+        	
+        	return doesNotSupportOnLoad;
     	}
             
 	ss.onload = function() {
@@ -26,7 +35,7 @@ function onloadCSS( ss, callback ) {
 	//	* Android 2.3 (Pantech Burst P9070)
 
 	// Weak inference targets Android < 4.4
-	if (("isApplicationInstalled" in navigator || isSafari5()) && "onloadcssdefined" in ss) {
+	if (("isApplicationInstalled" in navigator || doesNotSupportOnLoad()) && "onloadcssdefined" in ss) {
         	ss.onloadcssdefined(callback);
     	}	
 }
